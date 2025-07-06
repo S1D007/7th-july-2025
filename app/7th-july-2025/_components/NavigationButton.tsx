@@ -1,10 +1,8 @@
 import { PAGES, useFormStore } from "@/store/useFormStore";
 import React from "react";
 
-type NavigationButtonProps = {};
-
-function NavigationButton({}: NavigationButtonProps) {
-  const { currentStep, setCurrentStep, loading } = useFormStore();
+function NavigationButton() {
+  const { currentStep, setCurrentStep } = useFormStore();
   
   return (
     <div className="flex flex-row justify-between w-full mt-5 p-4">

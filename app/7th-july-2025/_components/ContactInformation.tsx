@@ -1,9 +1,9 @@
 import { useFormStore } from "@/store/useFormStore";
 import type { Data } from "@/store/useFormStore";
-import React, { useState } from "react";
+import React from "react";
 
 export default function ContactInformation() {
-  const { data, validationErrors, setValidationErrors, showValidationErrors } = useFormStore();
+  const { data, setData, validationErrors, setValidationErrors, showValidationErrors } = useFormStore();
 
   const validateField = (name: keyof Data, value: string) => {
     let error = "";
@@ -29,6 +29,8 @@ export default function ContactInformation() {
         placeholder="Enter your full name"
         error={showValidationErrors ? validationErrors.fullName : undefined}
         onBlur={validateField}
+        data={data}
+        setData={setData}
       />
 
       <Input
@@ -38,6 +40,8 @@ export default function ContactInformation() {
         placeholder="Enter your email"
         error={showValidationErrors ? validationErrors.email : undefined}
         onBlur={validateField}
+        data={data}
+        setData={setData}
       />
 
       <Input
@@ -47,6 +51,8 @@ export default function ContactInformation() {
         placeholder="Enter your mobile number"
         error={showValidationErrors ? validationErrors.phone : undefined}
         onBlur={validateField}
+        data={data}
+        setData={setData}
       />
     </div>
   );
@@ -59,6 +65,8 @@ function Input({
   placeholder,
   error,
   onBlur,
+  data,
+  setData,
 }: {
   label: string;
   name: keyof Data;
@@ -66,9 +74,9 @@ function Input({
   placeholder?: string;
   error?: string;
   onBlur?: (name: keyof Data, value: string) => void;
+  data: Data;
+  setData: (data: Partial<Data>) => void;
 }) {
-  const { data, setData } = useFormStore();
-
   const handleBlur = () => {
     onBlur?.(name, data[name] || "");
   };

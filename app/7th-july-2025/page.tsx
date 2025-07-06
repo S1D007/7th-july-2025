@@ -2,13 +2,9 @@
 import React from "react";
 import HexagonBackground from "./HexagonBackground";
 import NavigationButton from "./_components/NavigationButton";
-import ContactInformation from "./_components/ContactInformation";
-import ConfirmParticipation from "./_components/ConfirmParticipation";
-import FurtherInformation from "./_components/FurtherInformation";
-import Thankyou from "./_components/Thankyou";
 import { PAGES, useFormStore } from "@/store/useFormStore";
 
-function page() {
+function Page() {
   const { currentStep, loading } = useFormStore();
   const CurrentPage = PAGES[currentStep];
   if (loading) {
@@ -44,4 +40,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
