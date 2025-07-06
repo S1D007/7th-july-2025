@@ -18,6 +18,7 @@ const Thankyou: React.FC = () => {
             src={
               "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png"
             }
+            alt="QR code for event entry"
             className="w-72 h-72 bg-white rounded-2xl"
           />
           <p className="mt-2 text-sm text-gray-100">
