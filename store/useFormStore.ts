@@ -43,17 +43,39 @@ interface FormStore extends FormState {
   setIsParticipating: (value: boolean) => void;
 
   setData: (data: Partial<Data>) => void;
+  
+  validationErrors: Partial<Record<keyof Data, string>>;
+  setValidationErrors: (errors: Partial<Record<keyof Data, string>>) => void;
+  showValidationErrors: boolean;
+  setShowValidationErrors: (show: boolean) => void;
+  
   /**
    * Submits the form data to the API. Returns the QR code (submission._id) on success.
    * If not participating, only participation field is sent.
    */
   submitForm: () => void;
+  
+  /**
+   * Validates if the current step can proceed to the next step
+   */
+  canProceedToNextStep: () => boolean;
 }
 
 export const useFormStore = create<FormStore>((set, get) => ({
   currentStep: 0,
   loading: false,
   setCurrentStep: (step) => {
+    const { currentStep, canProceedToNextStep, setShowValidationErrors } = get();
+    
+    // If trying to go forward, validate current step
+    if (step > currentStep && !canProceedToNextStep()) {
+      setShowValidationErrors(true); // Show errors when validation fails
+      return; // Don't allow navigation if validation fails
+    }
+    
+    // Hide errors when successfully navigating
+    setShowValidationErrors(false);
+    
     if (step === 4) {
       set({ loading: true });
       useFormStore.getState().submitForm();
@@ -75,6 +97,14 @@ export const useFormStore = create<FormStore>((set, get) => ({
     room: "",
   },
   isParticipating: null,
+  
+  validationErrors: {},
+  setValidationErrors: (errors) => set((state) => ({ 
+    validationErrors: { ...state.validationErrors, ...errors } 
+  })),
+  showValidationErrors: false,
+  setShowValidationErrors: (show) => set({ showValidationErrors: show }),
+  
   setIsParticipating: (value) => {
     if (!value) {
       // Reset data to only minimal fields for non-participation
@@ -331,5 +361,59 @@ export const useFormStore = create<FormStore>((set, get) => ({
     } finally {
       set({ loading: false });
     }
+  },
+  
+  canProceedToNextStep: () => {
+    const { currentStep, data, isParticipating, setValidationErrors } = get();
+    
+    // Validation for step 1 (ContactInformation - index 1)
+    if (currentStep === 1) {
+      const errors: Partial<Record<keyof Data, string>> = {};
+      
+      if (!data.fullName || !data.fullName.trim()) {
+        errors.fullName = "Full name is required.";
+      }
+      if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        errors.email = "Enter a valid email address.";
+      }
+      if (!data.phone || !/^\d{10}$/.test(data.phone)) {
+        errors.phone = "Enter a valid 10-digit mobile number.";
+      }
+      
+      setValidationErrors(errors);
+      return Object.keys(errors).length === 0;
+    }
+    
+    // Validation for step 2 (ConfirmParticipation - index 2)
+    if (currentStep === 2) {
+      return isParticipating !== null;
+    }
+    
+    // Validation for step 3 (FurtherInformation - index 3) - only if participating
+    if (currentStep === 3 && isParticipating) {
+      const errors: Partial<Record<keyof Data, string>> = {};
+      
+      if (!data.institute || !data.institute.trim()) {
+        errors.institute = "Institute name is required.";
+      }
+      if (!data.role || !data.role.trim()) {
+        errors.role = "Role is required.";
+      }
+      if (!data.name || !data.name.trim()) {
+        errors.name = "Name as per Govt ID is required.";
+      }
+      if (!data.dietary || !data.dietary.trim()) {
+        errors.dietary = "Dietary preference is required.";
+      }
+      if (!data.room || !data.room.trim()) {
+        errors.room = "Room preference is required.";
+      }
+      
+      setValidationErrors(errors);
+      return Object.keys(errors).length === 0;
+    }
+    
+    // For other steps, allow navigation (you can add more validations here)
+    return true;
   },
 }));

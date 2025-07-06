@@ -2,7 +2,7 @@ import React from "react";
 
 function Content() {
   return (
-    <div className="bg-white bg-opacity-90 rounded-xl shadow-lg p-8 max-w-2xl w-full text-gray-800">
+    <div className="bg-white bg-opacity-90 rounded-xl shadow-lg p-8 mt-[4rem] max-w-2xl w-full text-gray-800">
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center text-black">
         Dear Doctor
       </h1>

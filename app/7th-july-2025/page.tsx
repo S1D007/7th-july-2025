@@ -27,12 +27,12 @@ function page() {
       <img
         src="/logo.png"
         alt="Logo"
-        className="absolute top-2 left-2 w-32 h-auto sm:top-6 sm:left-6 sm:w-44 md:w-52 lg:w-40 filter invert brightness-0 z-20"
+        className="absolute top-5 left-5 w-32 h-auto sm:top-6 sm:left-6 sm:w-44 md:w-52 lg:w-40 filter invert brightness-0 z-20"
       />
       <img
         src="/logo-2.png"
         alt="Logo 2"
-        className="absolute top-2 right-2 w-32 h-auto sm:top-6 sm:right-6 sm:w-44 md:w-52 lg:w-40 z-20"
+        className="absolute top-5 right-5 w-32 h-auto sm:top-6 sm:right-6 sm:w-44 md:w-52 lg:w-40 z-20"
       />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[40vh] p-4 ">
         <CurrentPage />
