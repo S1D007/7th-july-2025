@@ -3,8 +3,7 @@ import type { Data } from "@/store/useFormStore";
 import React, { useState } from "react";
 
 export default function ContactInformation() {
-  const { data } = useFormStore();
-  const [errors, setErrors] = useState<Partial<Record<keyof Data, string>>>({});
+  const { data, validationErrors, setValidationErrors, showValidationErrors } = useFormStore();
 
   const validateField = (name: keyof Data, value: string) => {
     let error = "";
@@ -15,11 +14,12 @@ export default function ContactInformation() {
     } else if (name === "phone" && !/^\d{10}$/.test(value)) {
       error = "Enter a valid 10-digit mobile number.";
     }
-    setErrors((prev) => ({ ...prev, [name]: error }));
+    setValidationErrors({ [name]: error });
+    return error;
   };
 
   return (
-    <div className="p-6 w-full min-w-xl mx-auto rounded-xl space-y-5">
+    <div className="p-6 py-[4rem] w-screen max-w-[45rem] mx-auto rounded-xl space-y-5">
       <h2 className="text-2xl font-semibold text-white">Contact Information</h2>
 
       <Input
@@ -27,7 +27,7 @@ export default function ContactInformation() {
         name="fullName"
         type="text"
         placeholder="Enter your full name"
-        error={errors.fullName}
+        error={showValidationErrors ? validationErrors.fullName : undefined}
         onBlur={validateField}
       />
 
@@ -36,7 +36,7 @@ export default function ContactInformation() {
         name="email"
         type="email"
         placeholder="Enter your email"
-        error={errors.email}
+        error={showValidationErrors ? validationErrors.email : undefined}
         onBlur={validateField}
       />
 
@@ -45,7 +45,7 @@ export default function ContactInformation() {
         name="phone"
         type="tel"
         placeholder="Enter your mobile number"
-        error={errors.phone}
+        error={showValidationErrors ? validationErrors.phone : undefined}
         onBlur={validateField}
       />
     </div>
@@ -86,9 +86,9 @@ function Input({
         value={data[name] || ""}
         onChange={(e) => setData({ [name]: e.target.value })}
         onBlur={handleBlur}
-        className={`block w-full text-lg px-4 py-2 border rounded-lg focus:ring-2 ${
-          error ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
-        } focus:outline-none bg-white`}
+        className={`block w-full text-lg px-2 py-2 border-0 border-b-2 bg-transparent focus:ring-0 focus:outline-none transition-colors ${
+          error ? "border-b-red-500" : "border-b-gray-300 focus:border-b-black"
+        }`}
       />
       {error && <span className="text-red-500 text-sm mt-1">{error}</span>}
     </div>

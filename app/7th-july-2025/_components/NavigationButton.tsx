@@ -5,19 +5,20 @@ type NavigationButtonProps = {};
 
 function NavigationButton({}: NavigationButtonProps) {
   const { currentStep, setCurrentStep, loading } = useFormStore();
+  
   return (
     <div className="flex flex-row justify-between w-full mt-5 p-4">
       <button
         onClick={() => setCurrentStep(currentStep - 1)}
         disabled={currentStep === 0}
-        className="cursor-pointer bg-white text-gray-800 px-6 py-2 rounded-xl"
+        className="cursor-pointer bg-white text-gray-800 px-6 py-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Back
       </button>
       <button
         onClick={() => setCurrentStep(currentStep + 1)}
-        disabled={currentStep === PAGES.length} // Assuming 3 is the last step
-        className="cursor-pointer bg-black text-white px-6 py-2 rounded-xl"
+        disabled={currentStep === PAGES.length - 1}
+        className="bg-black text-white cursor-pointer hover:bg-gray-800 px-6 py-2 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Next
       </button>
