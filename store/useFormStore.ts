@@ -165,6 +165,17 @@ export const useFormStore = create<FormStore>((set, get) => ({
           verifyConsent: false,
         },
         {
+          fieldId: "686901ef56b8527b7d9a7991",
+          fieldName: "Email",
+          placeholder: "",
+          fieldType: "EMAIL",
+          fieldValue: data.email,
+          options: [],
+          isHidden: false,
+          isRequired: true,
+          verifyConsent: false,
+        },
+        {
           fieldId: "6875e74f0c16051a7eebc627",
           fieldName: "Emergency Contact Name",
           placeholder: "",
