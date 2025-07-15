@@ -91,7 +91,7 @@ export default function ContactInformation() {
         label="Emergency contact name"
         name="emergencyContactName"
         type="text"
-        placeholder="emergency Contact Name..."
+        placeholder="Emergency Contact Name..."
         error={showValidationErrors ? validationErrors.emergencyContactName : undefined}
         onBlur={validateField}
         data={data}
@@ -108,20 +108,22 @@ export default function ContactInformation() {
         setData={setData}
       />
 
-      <div className="flex items-center gap-2 mt-4 p-4 rounded-xl shadow bg-white">
-        <input
-          onBlur={() => validateField("consent", data.consent || "")}
-          type="checkbox"
-          className="size-5"
-          checked={data.consent === "Yes"}
-          onChange={(e) => {
-            setData({ consent: e.target.checked ? "Yes" : "No" });
-          }
-          } />
-        <p> I consent for AbbVie to process and collect my personal data.</p>
-        {showValidationErrors && validationErrors.consent && (
-          <span className="text-red-500 text-sm mt-1">!</span>
-        )}
+      <div className="p-4 rounded-xl shadow bg-white">
+        <div className="flex items-center gap-2">
+          <input
+            onBlur={() => validateField("consent", data.consent || "")}
+            type="checkbox"
+            className="size-6"
+            checked={data.consent === "Yes"}
+            onChange={(e) => {
+              setData({ consent: e.target.checked ? "Yes" : "No" });
+            }
+            } />
+          <p> I consent for AbbVie to process and collect my personal data. <b className="text-red-500">*</b></p>
+        </div>
+        {/* {showValidationErrors && validationErrors.consent && (
+          <span className="text-red-500 text-sm mt-1">{validationErrors.consent}</span>
+        )} */}
       </div>
 
 

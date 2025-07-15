@@ -166,7 +166,7 @@ export const useFormStore = create<FormStore>((set, get) => ({
         },
         {
           fieldId: "686901ef56b8527b7d9a7991",
-          fieldName: "Email",
+          fieldName: "Email Id",
           placeholder: "",
           fieldType: "EMAIL",
           fieldValue: data.email,
@@ -510,9 +510,9 @@ export const useFormStore = create<FormStore>((set, get) => ({
     if (currentStep === 3 && isParticipating) {
       const errors: Partial<Record<keyof Data, string>> = {};
 
-      if (!data.institute || !data.institute.trim()) {
-        errors.institute = "Institute name is required.";
-      }
+      // if (!data.institute || !data.institute.trim()) {
+      //   errors.institute = "Institute name is required.";
+      // }
       if (!data.role || !data.role.trim()) {
         errors.role = "Role is required.";
       }
