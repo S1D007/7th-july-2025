@@ -186,7 +186,7 @@ function Input({
   placeholder?: string;
   error?: string;
 }) {
-  const isRequired = ["institute", "name", "arrival", "departure"].includes(name);
+  const isRequired = ["name", "arrival", "departure"].includes(name);
   
   return (
     <div className="w-full bg-white p-4 rounded-xl shadow-sm flex flex-col gap-1">
