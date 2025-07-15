@@ -22,9 +22,13 @@ interface FormState {
 }
 
 export interface Data {
-  fullName: string;
-  email: string;
+  firstName: string;
+  lastName: string;
+  emergencyContactName: string;
+  emergencyContactNumber: string;
+  consent: "No" | "Yes";
   phone: string;
+  email: string;
   institute: string;
   city: string;
   role: string;
@@ -43,18 +47,18 @@ interface FormStore extends FormState {
   setIsParticipating: (value: boolean) => void;
 
   setData: (data: Partial<Data>) => void;
-  
+
   validationErrors: Partial<Record<keyof Data, string>>;
   setValidationErrors: (errors: Partial<Record<keyof Data, string>>) => void;
   showValidationErrors: boolean;
   setShowValidationErrors: (show: boolean) => void;
-  
+
   /**
    * Submits the form data to the API. Returns the QR code (submission._id) on success.
    * If not participating, only participation field is sent.
    */
   submitForm: () => void;
-  
+
   /**
    * Validates if the current step can proceed to the next step
    */
@@ -65,17 +69,16 @@ export const useFormStore = create<FormStore>((set, get) => ({
   currentStep: 0,
   loading: false,
   setCurrentStep: (step) => {
-    const { currentStep, canProceedToNextStep, setShowValidationErrors } = get();
-    
-    // If trying to go forward, validate current step
+    const { currentStep, canProceedToNextStep, setShowValidationErrors } =
+      get();
+
     if (step > currentStep && !canProceedToNextStep()) {
-      setShowValidationErrors(true); // Show errors when validation fails
-      return; // Don't allow navigation if validation fails
+      setShowValidationErrors(true);
+      return;
     }
-    
-    // Hide errors when successfully navigating
+
     setShowValidationErrors(false);
-    
+
     if (step === 4) {
       set({ loading: true });
       useFormStore.getState().submitForm();
@@ -83,9 +86,13 @@ export const useFormStore = create<FormStore>((set, get) => ({
     set({ currentStep: step });
   },
   data: {
-    fullName: "",
-    email: "",
+    firstName: "",
+    lastName: "",
+    emergencyContactName: "",
+    emergencyContactNumber: "",
+    consent: "No",
     phone: "",
+    email: "",
     institute: "",
     city: "",
     role: "",
@@ -97,14 +104,15 @@ export const useFormStore = create<FormStore>((set, get) => ({
     room: "",
   },
   isParticipating: null,
-  
+
   validationErrors: {},
-  setValidationErrors: (errors) => set((state) => ({ 
-    validationErrors: { ...state.validationErrors, ...errors } 
-  })),
+  setValidationErrors: (errors) =>
+    set((state) => ({
+      validationErrors: { ...state.validationErrors, ...errors },
+    })),
   showValidationErrors: false,
   setShowValidationErrors: (show) => set({ showValidationErrors: show }),
-  
+
   setIsParticipating: (value) => {
     if (!value) {
       // Reset data to only minimal fields for non-participation
@@ -157,11 +165,59 @@ export const useFormStore = create<FormStore>((set, get) => ({
           verifyConsent: false,
         },
         {
+          fieldId: "6875e74f0c16051a7eebc627",
+          fieldName: "Emergency Contact Name",
+          placeholder: "",
+          fieldType: "NAME",
+          fieldValue: data.emergencyContactName,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875e74f0c16051a7eebc628",
+          fieldName: "Emergency contact Nummber",
+          placeholder: "",
+          fieldType: "PHONE_NUMBER",
+          fieldValue: data.emergencyContactNumber,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875de100c16051a7eebb646",
+          fieldName:
+            " I consent for AbbVie to process and collect my personal data.",
+          placeholder: "",
+          fieldType: "CHECKBOX",
+          fieldValue:
+            data.consent === "Yes"
+              ? "Yes6875de100c16051a7eebb646"
+              : "No6875de100c16051a7eebb646",
+          options: ["Yes", "No"],
+          isHidden: false,
+          isRequired: true,
+          verifyConsent: false,
+        },
+        {
           fieldId: "6869010856b8527b7d9a77e3",
-          fieldName: "Full Name",
+          fieldName: "First Name",
           placeholder: "Name",
           fieldType: "NAME",
-          fieldValue: data.fullName,
+          fieldValue: data.firstName,
+          options: [],
+          isHidden: false,
+          isRequired: true,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875cee50c16051a7eebb063",
+          fieldName: "Last Name",
+          placeholder: "Name",
+          fieldType: "NAME",
+          fieldValue: data.lastName,
           options: [],
           isHidden: false,
           isRequired: true,
@@ -211,17 +267,6 @@ export const useFormStore = create<FormStore>((set, get) => ({
           placeholder: "",
           fieldType: "PHONE_NUMBER",
           fieldValue: data.phone,
-          options: [],
-          isHidden: false,
-          isRequired: true,
-          verifyConsent: false,
-        },
-        {
-          fieldId: "686901ef56b8527b7d9a7991",
-          fieldName: "Email ID",
-          placeholder: "",
-          fieldType: "EMAIL",
-          fieldValue: data.email,
           options: [],
           isHidden: false,
           isRequired: true,
@@ -308,24 +353,35 @@ export const useFormStore = create<FormStore>((set, get) => ({
       const fields = [
         {
           fieldId: "686a497456b8527b7d9c310c",
-          fieldName: "Name",
+          fieldName: "First Name",
           placeholder: "",
           fieldType: "NAME",
-          fieldValue: data.fullName,
+          fieldValue: data.firstName,
           options: [],
           isHidden: false,
           isRequired: false,
           verifyConsent: false,
         },
         {
-          fieldId: "686a497456b8527b7d9c310d",
+          fieldId: "6875cd390c16051a7eebae07",
+          fieldName: "Last Name",
+          placeholder: "",
+          fieldType: "NAME",
+          fieldValue: data.lastName,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875e5030c16051a7eebc1dd",
           fieldName: "Email",
           placeholder: "",
           fieldType: "EMAIL",
           fieldValue: data.email,
           options: [],
           isHidden: false,
-          isRequired: false,
+          isRequired: true,
           verifyConsent: false,
         },
         {
@@ -337,6 +393,43 @@ export const useFormStore = create<FormStore>((set, get) => ({
           options: [],
           isHidden: false,
           isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875cd390c16051a7eebae09",
+          fieldName: "Emergency Contact Name",
+          placeholder: "",
+          fieldType: "NAME",
+          fieldValue: data.emergencyContactName,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875cd390c16051a7eebae0a",
+          fieldName: "Emergency contact Nummber",
+          placeholder: "",
+          fieldType: "PHONE_NUMBER",
+          fieldValue: data.emergencyContactNumber,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875de2f0c16051a7eebb6a8",
+          fieldName:
+            " I consent for AbbVie to process and collect my personal data.",
+          placeholder: "",
+          fieldType: "CHECKBOX",
+          fieldValue:
+            data.consent === "Yes"
+              ? "Yes6875de2f0c16051a7eebb6a8"
+              : "No6875de2f0c16051a7eebb6a8",
+          options: ["Yes", "No"],
+          isHidden: false,
+          isRequired: true,
           verifyConsent: false,
         },
       ];
@@ -362,37 +455,50 @@ export const useFormStore = create<FormStore>((set, get) => ({
       set({ loading: false });
     }
   },
-  
+
   canProceedToNextStep: () => {
     const { currentStep, data, isParticipating, setValidationErrors } = get();
-    
-    // Validation for step 1 (ContactInformation - index 1)
+
     if (currentStep === 1) {
       const errors: Partial<Record<keyof Data, string>> = {};
-      
-      if (!data.fullName || !data.fullName.trim()) {
-        errors.fullName = "Full name is required.";
+
+      if (!data.firstName || !data.firstName.trim()) {
+        errors.firstName = "First name is required.";
       }
-      if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      if (!data.lastName || !data.lastName.trim()) {
+        errors.lastName = "Last name is required.";
+      }
+      if (!data.email || !data.email.trim()) {
+        errors.email = "Email is required.";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
         errors.email = "Enter a valid email address.";
       }
-      if (!data.phone || !/^\d{10}$/.test(data.phone)) {
-        errors.phone = "Enter a valid 10-digit mobile number.";
+      if (!data.phone) {
+        errors.phone = "Enter a valid Phone number.";
       }
-      
+      if (!data.emergencyContactName || !data.emergencyContactName.trim()) {
+        errors.emergencyContactName = "Emergency ContactName name is required.";
+      }
+      if (!data.emergencyContactNumber) {
+        errors.emergencyContactNumber = "Enter a valid Phone number.";
+      }
+      if (!data.consent || data.consent === "No") {
+        errors.consent = "Consent is required.";
+      }
+      // console.log(data);
       setValidationErrors(errors);
       return Object.keys(errors).length === 0;
     }
-    
+
     // Validation for step 2 (ConfirmParticipation - index 2)
     if (currentStep === 2) {
       return isParticipating !== null;
     }
-    
+
     // Validation for step 3 (FurtherInformation - index 3) - only if participating
     if (currentStep === 3 && isParticipating) {
       const errors: Partial<Record<keyof Data, string>> = {};
-      
+
       if (!data.institute || !data.institute.trim()) {
         errors.institute = "Institute name is required.";
       }
@@ -408,11 +514,11 @@ export const useFormStore = create<FormStore>((set, get) => ({
       if (!data.room || !data.room.trim()) {
         errors.room = "Room preference is required.";
       }
-      
+
       setValidationErrors(errors);
       return Object.keys(errors).length === 0;
     }
-    
+
     // For other steps, allow navigation (you can add more validations here)
     return true;
   },
