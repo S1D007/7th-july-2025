@@ -26,7 +26,9 @@ export interface Data {
   lastName: string;
   emergencyContactName: string;
   emergencyContactNumber: string;
+  consent: "No" | "Yes";
   phone: string;
+  email: string;
   institute: string;
   city: string;
   role: string;
@@ -88,7 +90,9 @@ export const useFormStore = create<FormStore>((set, get) => ({
     lastName: "",
     emergencyContactName: "",
     emergencyContactNumber: "",
+    consent: "No",
     phone: "",
+    email: "",
     institute: "",
     city: "",
     role: "",
@@ -312,7 +316,18 @@ export const useFormStore = create<FormStore>((set, get) => ({
       const fields = [
         {
           fieldId: "686a497456b8527b7d9c310c",
-          fieldName: "Name",
+          fieldName: "First Name",
+          placeholder: "",
+          fieldType: "NAME",
+          fieldValue: data.firstName,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875cd390c16051a7eebae07",
+          fieldName: "Last Name",
           placeholder: "",
           fieldType: "NAME",
           fieldValue: data.lastName,
@@ -322,14 +337,14 @@ export const useFormStore = create<FormStore>((set, get) => ({
           verifyConsent: false,
         },
         {
-          fieldId: "6875cd390c16051a7eebae07",
-          fieldName: "Name",
+          fieldId: "6875e5030c16051a7eebc1dd",
+          fieldName: "Email",
           placeholder: "",
-          fieldType: "NAME",
-          fieldValue: data.lastName,
+          fieldType: "EMAIL",
+          fieldValue: data.email,
           options: [],
           isHidden: false,
-          isRequired: false,
+          isRequired: true,
           verifyConsent: false,
         },
         {
@@ -345,7 +360,7 @@ export const useFormStore = create<FormStore>((set, get) => ({
         },
         {
           fieldId: "6875cd390c16051a7eebae09",
-          fieldName: "Name",
+          fieldName: "Emergency Contact Name",
           placeholder: "",
           fieldType: "NAME",
           fieldValue: data.emergencyContactName,
@@ -355,7 +370,7 @@ export const useFormStore = create<FormStore>((set, get) => ({
           verifyConsent: false,
         },
         {
-          fieldId: "6875cd390c16051a7eebae09",
+          fieldId: "6875cd390c16051a7eebae0a",
           fieldName: "Emergency contact Nummber",
           placeholder: "",
           fieldType: "PHONE_NUMBER",
@@ -363,6 +378,21 @@ export const useFormStore = create<FormStore>((set, get) => ({
           options: [],
           isHidden: false,
           isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875de2f0c16051a7eebb6a8",
+          fieldName:
+            " I consent for AbbVie to process and collect my personal data.",
+          placeholder: "",
+          fieldType: "CHECKBOX",
+          fieldValue:
+            data.consent === "Yes"
+              ? "Yes6875de2f0c16051a7eebb6a8"
+              : "No6875de2f0c16051a7eebb6a8",
+          options: ["Yes", "No"],
+          isHidden: false,
+          isRequired: true,
           verifyConsent: false,
         },
       ];
@@ -401,6 +431,11 @@ export const useFormStore = create<FormStore>((set, get) => ({
       if (!data.lastName || !data.lastName.trim()) {
         errors.lastName = "Last name is required.";
       }
+      if (!data.email || !data.email.trim()) {
+        errors.email = "Email is required.";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+        errors.email = "Enter a valid email address.";
+      }
       if (!data.phone) {
         errors.phone = "Enter a valid Phone number.";
       }
@@ -410,7 +445,10 @@ export const useFormStore = create<FormStore>((set, get) => ({
       if (!data.emergencyContactNumber) {
         errors.emergencyContactNumber = "Enter a valid Phone number.";
       }
-
+      if (!data.consent || data.consent === "No") {
+        errors.consent = "Consent is required.";
+      }
+      // console.log(data);
       setValidationErrors(errors);
       return Object.keys(errors).length === 0;
     }

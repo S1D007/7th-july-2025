@@ -13,10 +13,22 @@ export default function ContactInformation() {
       error = "Last Name is required.";
     } else if (name === "phone" && !value.trim()) {
       error = "Enter a valid Phone number ."
+    }
+    else if (name === "email" && !value.trim()) {
+      error = "Email is required.";
+    } else if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      error = "Enter a valid email address.";
     } else if (name === "emergencyContactName" && !value.trim()) {
       error = "Emergency Contact Name name is required.";
     } else if (name === "emergencyContactNumber" && !value.trim()) {
       error = "Enter a valid Phone number ."
+    }
+    else if (name === "emergencyContactName" && !value.trim()) {
+      error = "Emergency Contact Name name is required.";
+    } else if (name === "emergencyContactNumber" && !value.trim()) {
+      error = "Enter a valid Phone number ."
+    } else if (name === "consent" && data.consent == "No") {
+      error = "Consent is required.";
     }
 
     setValidationErrors({ [name]: error });
@@ -28,7 +40,7 @@ export default function ContactInformation() {
       <h2 className="text-2xl font-semibold text-white">Contact Information</h2>
 
       <div className="">
-        <div className="flex gap-5 ">
+        <div className="flex flex-col md:flex-row gap-5 ">
           <Input
             label="First Name"
             name="firstName"
@@ -53,6 +65,17 @@ export default function ContactInformation() {
         </div>
         <span className="text-white">Same name will be used for Flight & Hotel Check-in.</span>
       </div>
+
+      <Input
+        label="Email"
+        name="email"
+        type="email"
+        placeholder="Enter your email address"
+        error={showValidationErrors ? validationErrors.email : undefined}
+        onBlur={validateField}
+        data={data}
+        setData={setData}
+      />
 
       <Input
         label="Mobile"
@@ -84,6 +107,22 @@ export default function ContactInformation() {
         data={data}
         setData={setData}
       />
+
+      <div className="flex items-center gap-2 mt-4 p-4 rounded-xl shadow bg-white">
+        <input
+          onBlur={() => validateField("consent", data.consent || "")}
+          type="checkbox"
+          className="size-5"
+          checked={data.consent === "Yes"}
+          onChange={(e) => {
+            setData({ consent: e.target.checked ? "Yes" : "No" });
+          }
+          } />
+        <p> I consent for AbbVie to process and collect my personal data.</p>
+        {showValidationErrors && validationErrors.consent && (
+          <span className="text-red-500 text-sm mt-1">!</span>
+        )}
+      </div>
 
 
     </div>
