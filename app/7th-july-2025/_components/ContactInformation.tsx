@@ -91,7 +91,7 @@ export default function ContactInformation() {
         label="Emergency contact name"
         name="emergencyContactName"
         type="text"
-        placeholder="emergency Contact Name..."
+        placeholder="Emergency Contact Name..."
         error={showValidationErrors ? validationErrors.emergencyContactName : undefined}
         onBlur={validateField}
         data={data}
