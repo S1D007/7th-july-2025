@@ -165,6 +165,43 @@ export const useFormStore = create<FormStore>((set, get) => ({
           verifyConsent: false,
         },
         {
+          fieldId: "6875e74f0c16051a7eebc627",
+          fieldName: "Emergency Contact Name",
+          placeholder: "",
+          fieldType: "NAME",
+          fieldValue: data.emergencyContactName,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875e74f0c16051a7eebc628",
+          fieldName: "Emergency contact Nummber",
+          placeholder: "",
+          fieldType: "PHONE_NUMBER",
+          fieldValue: data.emergencyContactNumber,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875de100c16051a7eebb646",
+          fieldName:
+            " I consent for AbbVie to process and collect my personal data.",
+          placeholder: "",
+          fieldType: "CHECKBOX",
+          fieldValue:
+            data.consent === "Yes"
+              ? "Yes6875de100c16051a7eebb646"
+              : "No6875de100c16051a7eebb646",
+          options: ["Yes", "No"],
+          isHidden: false,
+          isRequired: true,
+          verifyConsent: false,
+        },
+        {
           fieldId: "6869010856b8527b7d9a77e3",
           fieldName: "First Name",
           placeholder: "Name",
