@@ -22,8 +22,10 @@ interface FormState {
 }
 
 export interface Data {
-  fullName: string;
-  email: string;
+  firstName: string;
+  lastName: string;
+  emergencyContactName: string;
+  emergencyContactNumber: string;
   phone: string;
   institute: string;
   city: string;
@@ -43,18 +45,18 @@ interface FormStore extends FormState {
   setIsParticipating: (value: boolean) => void;
 
   setData: (data: Partial<Data>) => void;
-  
+
   validationErrors: Partial<Record<keyof Data, string>>;
   setValidationErrors: (errors: Partial<Record<keyof Data, string>>) => void;
   showValidationErrors: boolean;
   setShowValidationErrors: (show: boolean) => void;
-  
+
   /**
    * Submits the form data to the API. Returns the QR code (submission._id) on success.
    * If not participating, only participation field is sent.
    */
   submitForm: () => void;
-  
+
   /**
    * Validates if the current step can proceed to the next step
    */
@@ -65,17 +67,16 @@ export const useFormStore = create<FormStore>((set, get) => ({
   currentStep: 0,
   loading: false,
   setCurrentStep: (step) => {
-    const { currentStep, canProceedToNextStep, setShowValidationErrors } = get();
-    
-    // If trying to go forward, validate current step
+    const { currentStep, canProceedToNextStep, setShowValidationErrors } =
+      get();
+
     if (step > currentStep && !canProceedToNextStep()) {
-      setShowValidationErrors(true); // Show errors when validation fails
-      return; // Don't allow navigation if validation fails
+      setShowValidationErrors(true);
+      return;
     }
-    
-    // Hide errors when successfully navigating
+
     setShowValidationErrors(false);
-    
+
     if (step === 4) {
       set({ loading: true });
       useFormStore.getState().submitForm();
@@ -83,8 +84,10 @@ export const useFormStore = create<FormStore>((set, get) => ({
     set({ currentStep: step });
   },
   data: {
-    fullName: "",
-    email: "",
+    firstName: "",
+    lastName: "",
+    emergencyContactName: "",
+    emergencyContactNumber: "",
     phone: "",
     institute: "",
     city: "",
@@ -97,14 +100,15 @@ export const useFormStore = create<FormStore>((set, get) => ({
     room: "",
   },
   isParticipating: null,
-  
+
   validationErrors: {},
-  setValidationErrors: (errors) => set((state) => ({ 
-    validationErrors: { ...state.validationErrors, ...errors } 
-  })),
+  setValidationErrors: (errors) =>
+    set((state) => ({
+      validationErrors: { ...state.validationErrors, ...errors },
+    })),
   showValidationErrors: false,
   setShowValidationErrors: (show) => set({ showValidationErrors: show }),
-  
+
   setIsParticipating: (value) => {
     if (!value) {
       // Reset data to only minimal fields for non-participation
@@ -158,10 +162,21 @@ export const useFormStore = create<FormStore>((set, get) => ({
         },
         {
           fieldId: "6869010856b8527b7d9a77e3",
-          fieldName: "Full Name",
+          fieldName: "First Name",
           placeholder: "Name",
           fieldType: "NAME",
-          fieldValue: data.fullName,
+          fieldValue: data.firstName,
+          options: [],
+          isHidden: false,
+          isRequired: true,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875cee50c16051a7eebb063",
+          fieldName: "Last Name",
+          placeholder: "Name",
+          fieldType: "NAME",
+          fieldValue: data.lastName,
           options: [],
           isHidden: false,
           isRequired: true,
@@ -211,17 +226,6 @@ export const useFormStore = create<FormStore>((set, get) => ({
           placeholder: "",
           fieldType: "PHONE_NUMBER",
           fieldValue: data.phone,
-          options: [],
-          isHidden: false,
-          isRequired: true,
-          verifyConsent: false,
-        },
-        {
-          fieldId: "686901ef56b8527b7d9a7991",
-          fieldName: "Email ID",
-          placeholder: "",
-          fieldType: "EMAIL",
-          fieldValue: data.email,
           options: [],
           isHidden: false,
           isRequired: true,
@@ -311,18 +315,18 @@ export const useFormStore = create<FormStore>((set, get) => ({
           fieldName: "Name",
           placeholder: "",
           fieldType: "NAME",
-          fieldValue: data.fullName,
+          fieldValue: data.lastName,
           options: [],
           isHidden: false,
           isRequired: false,
           verifyConsent: false,
         },
         {
-          fieldId: "686a497456b8527b7d9c310d",
-          fieldName: "Email",
+          fieldId: "6875cd390c16051a7eebae07",
+          fieldName: "Name",
           placeholder: "",
-          fieldType: "EMAIL",
-          fieldValue: data.email,
+          fieldType: "NAME",
+          fieldValue: data.lastName,
           options: [],
           isHidden: false,
           isRequired: false,
@@ -334,6 +338,28 @@ export const useFormStore = create<FormStore>((set, get) => ({
           placeholder: "",
           fieldType: "PHONE_NUMBER",
           fieldValue: data.phone,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875cd390c16051a7eebae09",
+          fieldName: "Name",
+          placeholder: "",
+          fieldType: "NAME",
+          fieldValue: data.emergencyContactName,
+          options: [],
+          isHidden: false,
+          isRequired: false,
+          verifyConsent: false,
+        },
+        {
+          fieldId: "6875cd390c16051a7eebae09",
+          fieldName: "Emergency contact Nummber",
+          placeholder: "",
+          fieldType: "PHONE_NUMBER",
+          fieldValue: data.emergencyContactNumber,
           options: [],
           isHidden: false,
           isRequired: false,
@@ -362,37 +388,42 @@ export const useFormStore = create<FormStore>((set, get) => ({
       set({ loading: false });
     }
   },
-  
+
   canProceedToNextStep: () => {
     const { currentStep, data, isParticipating, setValidationErrors } = get();
-    
-    // Validation for step 1 (ContactInformation - index 1)
+
     if (currentStep === 1) {
       const errors: Partial<Record<keyof Data, string>> = {};
-      
-      if (!data.fullName || !data.fullName.trim()) {
-        errors.fullName = "Full name is required.";
+
+      if (!data.firstName || !data.firstName.trim()) {
+        errors.firstName = "First name is required.";
       }
-      if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-        errors.email = "Enter a valid email address.";
+      if (!data.lastName || !data.lastName.trim()) {
+        errors.lastName = "Last name is required.";
       }
-      if (!data.phone || !/^\d{10}$/.test(data.phone)) {
-        errors.phone = "Enter a valid 10-digit mobile number.";
+      if (!data.phone) {
+        errors.phone = "Enter a valid Phone number.";
       }
-      
+      if (!data.emergencyContactName || !data.emergencyContactName.trim()) {
+        errors.emergencyContactName = "Emergency ContactName name is required.";
+      }
+      if (!data.emergencyContactNumber) {
+        errors.emergencyContactNumber = "Enter a valid Phone number.";
+      }
+
       setValidationErrors(errors);
       return Object.keys(errors).length === 0;
     }
-    
+
     // Validation for step 2 (ConfirmParticipation - index 2)
     if (currentStep === 2) {
       return isParticipating !== null;
     }
-    
+
     // Validation for step 3 (FurtherInformation - index 3) - only if participating
     if (currentStep === 3 && isParticipating) {
       const errors: Partial<Record<keyof Data, string>> = {};
-      
+
       if (!data.institute || !data.institute.trim()) {
         errors.institute = "Institute name is required.";
       }
@@ -408,11 +439,11 @@ export const useFormStore = create<FormStore>((set, get) => ({
       if (!data.room || !data.room.trim()) {
         errors.room = "Room preference is required.";
       }
-      
+
       setValidationErrors(errors);
       return Object.keys(errors).length === 0;
     }
-    
+
     // For other steps, allow navigation (you can add more validations here)
     return true;
   },
