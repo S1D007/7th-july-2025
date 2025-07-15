@@ -139,7 +139,6 @@ function Input({
   onBlur,
   data,
   setData,
-  className,
 }: {
   label: string;
   name: keyof Data;
