@@ -1,11 +1,13 @@
-import React from 'react'
+"use client"
+import { useEffect } from 'react'
+import { redirect } from 'next/navigation'
 
-function page() {
-  return (
-    <div>
-      
-    </div>
-  )
+
+
+
+export default function Home() {
+  useEffect(() => {
+    redirect("/investigators-meet-2025")
+  }, [])
+
 }
-
-export default page

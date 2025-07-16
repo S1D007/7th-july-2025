@@ -1,9 +1,9 @@
-import ConfirmParticipation from "@/app/7th-july-2025/_components/ConfirmParticipation";
-import ContactInformation from "@/app/7th-july-2025/_components/ContactInformation";
-import Content from "@/app/7th-july-2025/_components/Content";
-import FurtherInformation from "@/app/7th-july-2025/_components/FurtherInformation";
-import NavigationButton from "@/app/7th-july-2025/_components/NavigationButton";
-import Thankyou from "@/app/7th-july-2025/_components/Thankyou";
+import ConfirmParticipation from "@/app/investigators-meet-2025/_components/ConfirmParticipation";
+import ContactInformation from "@/app/investigators-meet-2025/_components/ContactInformation";
+import Content from "@/app/investigators-meet-2025/_components/Content";
+import FurtherInformation from "@/app/investigators-meet-2025/_components/FurtherInformation";
+import NavigationButton from "@/app/investigators-meet-2025/_components/NavigationButton";
+import Thankyou from "@/app/investigators-meet-2025/_components/Thankyou";
 import { create } from "zustand";
 import axios from "axios";
 
